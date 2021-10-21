@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="box" id="heading">
+    <h1><%= data.today %></h1>
+  </div>
+
+  <div class="box">
+    <!-- start code of form input -->
+    <!-- form to take to-do input from user and send it to server -->
+    <form class="item" action="/" method="post">
+      <input type="text" name="item" id="new-item" placeholder="Add Item" autocomplete="off">
+      <button type="submit">+</button>
+    </form>
+    <!-- end of form input code -->
+    <% for(let i=0;i<data.len;i++){%>
+      <div class="item">
+        <input type="checkbox">
+        <p><%= data.items[i] %></p>
+      </div>
+    <%}%>
+  </div>
+
+
+
+
+  <!-- ejs if conditions usage start -->
+  <!-- <% if(data.today === "Thrusday"){ %>
+    <h1 style="color: aqua;">This is <%= data.today %> </h1>
+  <% }else{ %>
+    <h1 style="color: red;">This is <%= data.today %> </h1>
+  <% } %> -->
+  <!-- ejs if conditions usage end -->
+
+
+</body>
+</html>
