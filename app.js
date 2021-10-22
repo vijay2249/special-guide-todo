@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const express = require('express')
+const date = require(__dirname + "/date.js")
 
 const app = express()
 app.set('view engine', 'ejs');
@@ -7,20 +8,15 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
 
 let send = {
-  today: '',
+  today: date.getDay(),
   items: ["laundry", 'Lunch', 'Assignments'],
-  len: ''
+  secretList: [],
+  len: '',
+  isSecret: false
 }
-// default page change to weather app - weather.html
+
 app.get("/", function(request, response){
-  let date = new Date()
-  var options = {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long'
-  };
-  let thisDay = date.toLocaleString('en-US', options)
-  send.today = thisDay
+  send.today = date.getDay()
   send.len = send.items.length
   response.render('lists', {data: send})
 })
@@ -28,8 +24,21 @@ app.get("/", function(request, response){
 app.post("/", (request, response)=>{
   console.log(request.body);
   send.items.push(request.body.item)
-  console.log(send.items);
   response.redirect("/")
+})
+
+app.get("/about", (request, response)=>{
+  response.render("about")
+})
+
+app.get("/secret", (request, response)=>{
+  send.isSecret = true
+  response.render("lists", {data: send})
+})
+
+app.post("/secret", (request, response)=>{
+  send.secretList.push(request.body.item)
+  response.redirect("/secret")
 })
 
 
