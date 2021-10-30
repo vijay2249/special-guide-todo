@@ -14,7 +14,7 @@ let send = {
   len: '',
   isSecret: false
 }
-
+ 
 app.get("/", function(request, response){
   send.today = date.getDay()
   send.len = send.items.length
@@ -23,7 +23,7 @@ app.get("/", function(request, response){
 
 app.post("/", (request, response)=>{
   console.log(request.body);
-  send.items.push(request.body.item)
+  if(request.body.item.length != 0) send.items.push(request.body.item)
   response.redirect("/")
 })
 
