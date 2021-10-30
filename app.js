@@ -23,7 +23,7 @@ app.get("/", function(request, response){
 
 app.post("/", (request, response)=>{
   console.log(request.body);
-  if(request.body.item.length != 0) send.items.push(request.body.item)
+  if(request.body.item.length > 0) send.items.push(request.body.item)
   response.redirect("/")
 })
 
@@ -37,7 +37,7 @@ app.get("/secret", (request, response)=>{
 })
 
 app.post("/secret", (request, response)=>{
-  send.secretList.push(request.body.item)
+  if(request.body.item.length > 0) send.secretList.push(request.body.item)
   response.redirect("/secret")
 })
 
