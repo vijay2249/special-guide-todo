@@ -109,15 +109,29 @@ app.post("/:route", async (request, response)=>{
   }
 })
 
-app.post("/delete", async (request, response) =>{
+app.post("/delete/:route", async (request, response) =>{
   const item_id = request.body.delete_item
-  await todoListModel.deleteOne({_id: item_id}, async function(err){
-    if(err){
-      console.log(err);
-      response.render("404")
-    }
-  }).clone()
-  response.redirect("/")
+  const route = request.params.route
+  if(route === ''){
+    await todoListModel.deleteOne({_id: item_id}, async function(err){
+      if(err){
+        console.log(err);
+        response.render("404")
+      }
+    }).clone()
+    response.redirect("/")
+  }else{
+    await List.findOne({name: route}, async (err, result)=>{
+      if(err){
+        console.log(err);
+        response.render("404")
+      }
+      else{
+        console.log(result);
+        // delete item from the custom list
+      }
+    })
+  }
 })
 
 app.listen(3000, () => {
