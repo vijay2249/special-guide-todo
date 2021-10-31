@@ -43,7 +43,10 @@ app.get("/", async function(request, response){
     }else{
       if(result.length === 0){
         await todoListModel.insertMany(send.items, function(err){
-          if(err)console.log(err);
+          if(err){
+            console.log(err);
+            response.render("404")
+          }
           else console.log("Successfully inserted records");
         })
         response.redirect("/")
@@ -68,7 +71,10 @@ app.post("/", async (request, response)=>{
 app.get("/:route", async (request, response)=>{
   const route = request.params.route
   await List.findOne({name: route}, async function(err, result){
-    if(err)console.log(err);
+    if(err){
+      console.log(err);
+      response.render("404")
+    }
     else{
       if(!result){
         await new List({
@@ -90,7 +96,10 @@ app.post("/:route", async (request, response)=>{
   const item = new todoListModel({name: request.body.item})
   if(newtodoItem.length > 0){
     await List.findOne({name: route}, async (err, result)=>{
-      if(err)console.log(err);
+      if(err){
+        console.log(err);
+        response.render("404")
+      }
       else{
         result.items.push(item)
         result.save()
@@ -103,7 +112,10 @@ app.post("/:route", async (request, response)=>{
 app.post("/delete", async (request, response) =>{
   const item_id = request.body.delete_item
   await todoListModel.deleteOne({_id: item_id}, async function(err){
-    if(err)console.log(err);
+    if(err){
+      console.log(err);
+      response.render("404")
+    }
   }).clone()
   response.redirect("/")
 })
