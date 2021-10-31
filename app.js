@@ -59,7 +59,17 @@ app.get("/", async function(request, response){
 
 app.post("/", async (request, response)=>{
   const item = request.body.item
-  await new todoListModel({name: request.body.item}).save()
+  if(item.length > 0){
+    await new todoListModel({name: request.body.item}).save()
+  }
+  response.redirect("/")
+})
+
+app.post("/delete", async (request, response) =>{
+  const item_id = request.body.delete_item
+  await todoListModel.deleteOne({_id: item_id}, async function(err){
+    if(err)console.log(err);
+  }).clone()
   response.redirect("/")
 })
 
