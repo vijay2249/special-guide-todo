@@ -1,29 +1,65 @@
 const bodyParser = require('body-parser')
 const express = require('express')
+const mongoose = require('mongoose')
 const date = require(__dirname + "/date.js")
 
 const app = express()
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
+mongoose.connect('mongodb://localhost:27017/todoapp')
+
+const itemsSchema = {
+  name: String
+}
+
+const todoListModel = mongoose.model("todoListItem", itemsSchema)
+
+const laundry = new todoListModel({
+  name: 'Laundry'
+})
+
+const Lunch = new todoListModel({
+  name: 'Lunch'
+})
+
+const Assignments = new todoListModel({
+  name: 'Assignments'
+})
 
 let send = {
   today: date.getDay(),
-  items: ["laundry", 'Lunch', 'Assignments'],
+  items: [laundry, Lunch, Assignments],
   secretList: [],
-  len: '',
   isSecret: false
 }
+
+
  
-app.get("/", function(request, response){
-  send.today = date.getDay()
-  send.len = send.items.length
-  response.render('lists', {data: send})
+app.get("/", async function(request, response){
+
+  await todoListModel.find({}, async function(err, result){
+    if(err){
+      console.log(err);
+    }else{
+      if(result.length === 0){
+        await todoListModel.insertMany(send.items, function(err){
+          if(err)console.log(err);
+          else console.log("Successfully inserted records");
+        })
+        response.redirect("/")
+      }else{
+        send.items = result
+        send.today = date.getDay()
+        response.render('lists', {data: send})
+      }
+    }
+  }).clone()
 })
 
-app.post("/", (request, response)=>{
-  console.log(request.body);
-  if(request.body.item.length > 0) send.items.push(request.body.item)
+app.post("/", async (request, response)=>{
+  const item = request.body.item
+  await new todoListModel({name: request.body.item}).save()
   response.redirect("/")
 })
 

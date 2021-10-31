@@ -9,12 +9,14 @@
     <input type="text" name="item" id="new-item" placeholder="Add Item" autocomplete="off">
     <button type="submit" name="">+</button>
   </form>
-  <% for(let i=0;i<data.len;i++){%>
-    <div class="item">
-      <input type="checkbox">
-      <p><%= data.items[i] %></p>
-    </div>
-  <%}%>
+  <% data.items.forEach(item =>{ %>
+    <form action="/delete" method="post">
+      <div class="item">
+        <input type="checkbox">
+        <p><%= item.name %></p>
+      </div>
+    </form>
+  <% }) %>
 </div>
 
 <%- include('footer'); -%>
