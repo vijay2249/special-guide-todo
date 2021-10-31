@@ -1,11 +1,15 @@
 <%- include('headertext'); -%>
 
 <div class="box" id="heading">
-  <h1><%= data.today %></h1>
+  <% if(!data.title){ %>
+    <h1><%= data.today %> list</h1>
+  <% }else{ %>
+    <h1><%= data.title %> list</h1>
+  <% } %>
 </div>
 
 <div class="box">
-  <form class="item" action="/" method="post">
+  <form class="item" action="/<%= data.title %>" method="post">
     <input type="text" name="item" id="new-item" placeholder="Add Item" autocomplete="off">
     <button type="submit" name="">+</button>
   </form>

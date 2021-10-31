@@ -9,35 +9,34 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
 mongoose.connect('mongodb://localhost:27017/todoapp')
 
-const itemsSchema = {
-  name: String
-}
-
+const itemsSchema = { name: String }
 const todoListModel = mongoose.model("todoListItem", itemsSchema)
 
-const laundry = new todoListModel({
-  name: 'Laundry'
-})
-
-const Lunch = new todoListModel({
-  name: 'Lunch'
-})
-
-const Assignments = new todoListModel({
-  name: 'Assignments'
-})
-
-let send = {
-  today: date.getDay(),
-  items: [laundry, Lunch, Assignments],
-  secretList: [],
-  isSecret: false
+const routesSchema = {
+  name: String,
+  items: [itemsSchema]
 }
+const List = mongoose.model("list", routesSchema)
 
+// const laundry = new todoListModel({
+//   name: 'Laundry'
+// })
 
+// const Lunch = new todoListModel({
+//   name: 'Lunch'
+// })
+
+// const Assignments = new todoListModel({
+//   name: 'Assignments'
+// })
+
+const send = {
+  today: date.getDay(),
+  items: [],
+  title: '',
+}
  
 app.get("/", async function(request, response){
-
   await todoListModel.find({}, async function(err, result){
     if(err){
       console.log(err);
@@ -50,6 +49,7 @@ app.get("/", async function(request, response){
         response.redirect("/")
       }else{
         send.items = result
+        send.title = ''
         send.today = date.getDay()
         response.render('lists', {data: send})
       }
@@ -65,6 +65,41 @@ app.post("/", async (request, response)=>{
   response.redirect("/")
 })
 
+app.get("/:route", async (request, response)=>{
+  const route = request.params.route
+  await List.findOne({name: route}, async function(err, result){
+    if(err)console.log(err);
+    else{
+      if(!result){
+        await new List({
+          name: route
+        }).save()
+        response.redirect(`/${route}`)
+      }else{
+        send.title = route
+        send.items = result.items
+        response.render("lists", {data: send})
+      }
+    }
+  }).clone()
+})
+
+app.post("/:route", async (request, response)=>{
+  const newtodoItem = request.body.item
+  const route = request.params.route
+  const item = new todoListModel({name: request.body.item})
+  if(newtodoItem.length > 0){
+    await List.findOne({name: route}, async (err, result)=>{
+      if(err)console.log(err);
+      else{
+        result.items.push(item)
+        result.save()
+        response.redirect(`/${route}`)
+      }
+    }).clone()
+  }
+})
+
 app.post("/delete", async (request, response) =>{
   const item_id = request.body.delete_item
   await todoListModel.deleteOne({_id: item_id}, async function(err){
@@ -72,21 +107,6 @@ app.post("/delete", async (request, response) =>{
   }).clone()
   response.redirect("/")
 })
-
-app.get("/about", (request, response)=>{
-  response.render("about")
-})
-
-app.get("/secret", (request, response)=>{
-  send.isSecret = true
-  response.render("lists", {data: send})
-})
-
-app.post("/secret", (request, response)=>{
-  if(request.body.item.length > 0) send.secretList.push(request.body.item)
-  response.redirect("/secret")
-})
-
 
 app.listen(3000, () => {
   console.log("Server started on port 3000");
