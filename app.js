@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
+const _ = require('lodash')
 const date = require(__dirname + "/date.js")
 
 const app = express()
@@ -17,18 +18,6 @@ const routesSchema = {
   items: [itemsSchema]
 }
 const List = mongoose.model("list", routesSchema)
-
-// const laundry = new todoListModel({
-//   name: 'Laundry'
-// })
-
-// const Lunch = new todoListModel({
-//   name: 'Lunch'
-// })
-
-// const Assignments = new todoListModel({
-//   name: 'Assignments'
-// })
 
 const send = {
   today: date.getDay(),
@@ -69,7 +58,7 @@ app.post("/", async (request, response)=>{
 })
 
 app.get("/:route", async (request, response)=>{
-  const route = request.params.route
+  const route = _.capitalize(request.params.route)
   await List.findOne({name: route}, async function(err, result){
     if(err){
       console.log(err);
