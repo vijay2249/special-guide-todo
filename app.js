@@ -121,16 +121,14 @@ app.post("/delete/:route", async (request, response) =>{
     }).clone()
     response.redirect("/")
   }else{
-    await List.findOne({name: route}, async (err, result)=>{
+    await List.findOneAndUpdate({name: route}, {$pull : {items : {_id: item_id}}}, async function(err, result){
       if(err){
         console.log(err);
         response.render("404")
+      }else{
+        response.redirect(`/${route}`)
       }
-      else{
-        console.log(result);
-        // delete item from the custom list
-      }
-    })
+    }).clone()
   }
 })
 
