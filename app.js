@@ -8,7 +8,7 @@ const app = express()
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
-mongoose.connect(`mongodb+srv://${process.env.username}:${process.env.password}@cluster0.mhnfs.mongodb.net/todoapp`)
+mongoose.connect(`mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@cluster0.mhnfs.mongodb.net/todoapp`)
 
 const itemsSchema = { name: String }
 const todoListModel = mongoose.model("todoListItem", itemsSchema)
