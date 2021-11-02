@@ -8,7 +8,7 @@ const app = express()
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
-mongoose.connect('mongodb+srv://admin-vijay:<password>@cluster0.mhnfs.mongodb.net/todoapp')
+mongoose.connect(`mongodb+srv://${process.env.username}:${process.env.password}@cluster0.mhnfs.mongodb.net/todoapp`)
 
 const itemsSchema = { name: String }
 const todoListModel = mongoose.model("todoListItem", itemsSchema)
@@ -110,6 +110,6 @@ app.post("/delete/:route", async (request, response) =>{
   }
 })
 
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server started on port ${process.env.PORT || 3000}`);
 })
