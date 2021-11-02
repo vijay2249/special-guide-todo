@@ -22,29 +22,18 @@ const List = mongoose.model("list", routesSchema)
 const send = {
   today: date.getDay(),
   items: [],
-  title: '',
+  title: ''
 }
- 
+
 app.get("/", async function(request, response){
-  await todoListModel.find({}, async function(err, result){
+  await todoListModel.find({}, async (err, result) => {
     if(err){
-      console.log(err);
+      console.log(err)
     }else{
-      if(result.length === 0){
-        await todoListModel.insertMany(send.items, function(err){
-          if(err){
-            console.log(err);
-            response.render("404")
-          }
-          else console.log("Successfully inserted records");
-        })
-        response.redirect("/")
-      }else{
-        send.items = result
-        send.title = ''
-        send.today = date.getDay()
-        response.render('lists', {data: send})
-      }
+      send.items = result
+      send.title = ''
+      send.today = date.getDay()
+      response.render('lists', { data: send })
     }
   }).clone()
 })
