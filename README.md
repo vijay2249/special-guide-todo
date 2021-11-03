@@ -20,3 +20,10 @@
 ### Issues to fix (currently)
   1. All lists if the listname is found can be seen by everyone
   2. Trying to do all delete operations at one route
+
+## Contributions
+1.  Clone the repo
+2.  Create a new branch with `git checkout -b <branchName>`
+3.  Make changes and do experiments in the new branch
+4.  If the app works fine then merge the work into the main branch and then submit the pr
+5.  Add your name to contributors.md file
