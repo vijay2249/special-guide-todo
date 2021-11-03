@@ -68,6 +68,17 @@ app.get("/:route", async (request, response)=>{
   }).clone()
 })
 
+app.post('/delete', async (request, response)=>{
+  const item_id = request.body.delete_item
+  await todoListModel.deleteOne({_id: item_id}, async function(err){
+    if(err){
+      console.log(err);
+      response.render("404")
+    }
+  }).clone()
+  response.redirect("/")
+})
+
 app.post("/:route", async (request, response)=>{
   const newtodoItem = request.body.item
   const route = request.params.route
@@ -90,24 +101,14 @@ app.post("/:route", async (request, response)=>{
 app.post("/delete/:route", async (request, response) =>{
   const item_id = request.body.delete_item
   const route = request.params.route
-  if(route === ''){
-    await todoListModel.deleteOne({_id: item_id}, async function(err){
-      if(err){
-        console.log(err);
-        response.render("404")
-      }
-    }).clone()
-    response.redirect("/")
-  }else{
-    await List.findOneAndUpdate({name: route}, {$pull : {items : {_id: item_id}}}, async function(err, result){
-      if(err){
-        console.log(err);
-        response.render("404")
-      }else{
-        response.redirect(`/${route}`)
-      }
-    }).clone()
-  }
+  await List.findOneAndUpdate({name: route}, {$pull : {items : {_id: item_id}}}, async function(err){
+    if(err){
+      console.log(err);
+      response.render("404")
+    }else{
+      response.redirect(`/${route}`)
+    }
+  }).clone()
 })
 
 app.listen(process.env.PORT || 3000, () => {
