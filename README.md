@@ -10,7 +10,7 @@
 
 ## Versions and Features
 ### 0.1.0 (current)
-  1.  Create Custom lists by routing to https://ejs-playground.herokuapp.com/\<customListName\>
+  1.  Create Custom lists by routing to https://ejs-playground.herokuapp.com/<customListName\>
   
 ### 0.2.0 (beta)
   1.  Login form make separate lists for separate users
