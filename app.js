@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(express.static("public"))
 mongoose.connect(`mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@cluster0.mhnfs.mongodb.net/todoapp`)
 
-const itemsSchema = { name: String }
+const itemsSchema = { name: {type: String, required: true} }
 const todoListModel = mongoose.model("todoListItem", itemsSchema)
 
 const routesSchema = {
